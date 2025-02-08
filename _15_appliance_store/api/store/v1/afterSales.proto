@@ -1,0 +1,202 @@
+syntax = "proto3";
+
+package api.store.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "store/api/store/v1;v1";
+
+/*
+Reference https://github.com/grpc-ecosystem/grpc-gateway/blob/db7fbefff7c04877cdb32e16d4a248a024428207/examples/internal/proto/examplepb/a_bit_of_everything.proto
+Default settings for generating swagger documents
+NOTE: because json does not support 64 bits, the int64 and uint64 types under *.swagger.json are automatically converted to string types
+Tips: add swagger option to rpc method, example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "store api docs";
+    version: "2.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service afterSales {
+  // create afterSales
+  rpc Create(CreateAfterSalesRequest) returns (CreateAfterSalesReply) {
+    option (google.api.http) = {
+      post: "/api/v1/afterSales"
+      body: "*"
+    };
+  }
+
+  // delete afterSales by id
+  rpc DeleteByID(DeleteAfterSalesByIDRequest) returns (DeleteAfterSalesByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/v1/afterSales/{id}"
+    };
+  }
+
+  // update afterSales by id
+  rpc UpdateByID(UpdateAfterSalesByIDRequest) returns (UpdateAfterSalesByIDReply) {
+    option (google.api.http) = {
+      put: "/api/v1/afterSales/{id}"
+      body: "*"
+    };
+  }
+
+  // get afterSales by id
+  rpc GetByID(GetAfterSalesByIDRequest) returns (GetAfterSalesByIDReply) {
+    option (google.api.http) = {
+      get: "/api/v1/afterSales/{id}"
+    };
+  }
+
+  // list of afterSales by query parameters
+  rpc List(ListAfterSalesRequest) returns (ListAfterSalesReply) {
+    option (google.api.http) = {
+      post: "/api/v1/afterSales/list"
+      body: "*"
+    };
+  }
+
+  // -----------------------------------------------------------
+
+  // 创建维修工单
+  // 实现逻辑：
+  // 1. 验证客户购买记录有效性
+  // 2. 检查产品是否在保修期内
+  // 3. 分配就近服务网点
+  // 4. 生成带条形码的维修工单
+  rpc CreateServiceOrderWithAssignment(CreateServiceOrderWithAssignmentRequest) returns (CreateServiceOrderWithAssignmentReply) {
+    option (google.api.http) = {
+      post: "/api/v1/afterSales/service-orders"
+      body: "*"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/afterSales/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getAfterSales?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. If the message field name contain underscores(such as 'field_name'), it will cause a problem
+        where the JSON field names of the Swagger request parameters are different from those of the
+        GRPC JSON tag names. There are two solutions: Solution 1, remove the underline from the
+         message field name. Option 2, use the tool 'protoc-go-inject-tag' to modify the JSON tag name,
+         such as: string first_name = 1 ; // @gotags: json:"firstName"
+*/
+
+
+message CreateAfterSalesRequest {
+	string orderID = 1;  // 订单ID
+	string type = 2;  // 售后类型（退款、换货、维修）
+	string description = 3;  // 售后描述
+	string status = 4;  // 售后状态
+}
+
+message CreateAfterSalesReply {
+  uint64 id = 1;
+}
+
+message DeleteAfterSalesByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteAfterSalesByIDReply {
+
+}
+
+message UpdateAfterSalesByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];  // 售后服务ID
+	string orderID = 2;  // 订单ID
+	string type = 3;  // 售后类型（退款、换货、维修）
+	string description = 4;  // 售后描述
+	string status = 5;  // 售后状态
+}
+
+message UpdateAfterSalesByIDReply {
+
+}
+
+message AfterSales {
+	uint64 id = 1;  // 售后服务ID
+	string orderID = 2;  // 订单ID
+	string type = 3;  // 售后类型（退款、换货、维修）
+	string description = 4;  // 售后描述
+	string status = 5;  // 售后状态
+	string createdAt = 6;  // 创建时间
+	string updatedAt = 7;  // 更新时间
+}
+
+message GetAfterSalesByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetAfterSalesByIDReply {
+  AfterSales afterSales = 1;
+}
+
+message ListAfterSalesRequest {
+  api.types.Params params = 1;
+}
+
+message ListAfterSalesReply {
+  int64 total = 1;
+  repeated AfterSales afterSaless = 2;
+}
+
+// ------------------------------------------------------------------
+
+message CreateServiceOrderWithAssignmentRequest {
+  uint32 customerID = 1; // 客户ID
+  uint32 productID = 2; // 产品ID
+  string faultDescription = 3 [(validate.rules).string = {min_len: 10}]; // 故障描述（至少10字符）
+  string purchaseProof = 4; // 购买凭证URL
+}
+
+message CreateServiceOrderWithAssignmentReply {
+  string serviceOrderID = 1; // 生成的维修工单号
+  string assignedStore = 2; // 分配的服务网点名称
+  string qrCodeURL = 3; // 工单二维码访问地址
+}

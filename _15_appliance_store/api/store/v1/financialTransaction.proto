@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package api.store.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "store/api/store/v1;v1";
+
+/*
+Reference https://github.com/grpc-ecosystem/grpc-gateway/blob/db7fbefff7c04877cdb32e16d4a248a024428207/examples/internal/proto/examplepb/a_bit_of_everything.proto
+Default settings for generating swagger documents
+NOTE: because json does not support 64 bits, the int64 and uint64 types under *.swagger.json are automatically converted to string types
+Tips: add swagger option to rpc method, example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "store api docs";
+    version: "2.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service financialTransaction {
+  // create financialTransaction
+  rpc Create(CreateFinancialTransactionRequest) returns (CreateFinancialTransactionReply) {
+    option (google.api.http) = {
+      post: "/api/v1/financialTransaction"
+      body: "*"
+    };
+  }
+
+  // delete financialTransaction by id
+  rpc DeleteByID(DeleteFinancialTransactionByIDRequest) returns (DeleteFinancialTransactionByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/v1/financialTransaction/{id}"
+    };
+  }
+
+  // update financialTransaction by id
+  rpc UpdateByID(UpdateFinancialTransactionByIDRequest) returns (UpdateFinancialTransactionByIDReply) {
+    option (google.api.http) = {
+      put: "/api/v1/financialTransaction/{id}"
+      body: "*"
+    };
+  }
+
+  // get financialTransaction by id
+  rpc GetByID(GetFinancialTransactionByIDRequest) returns (GetFinancialTransactionByIDReply) {
+    option (google.api.http) = {
+      get: "/api/v1/financialTransaction/{id}"
+    };
+  }
+
+  // list of financialTransaction by query parameters
+  rpc List(ListFinancialTransactionRequest) returns (ListFinancialTransactionReply) {
+    option (google.api.http) = {
+      post: "/api/v1/financialTransaction/list"
+      body: "*"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/financialTransaction/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getFinancialTransaction?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. If the message field name contain underscores(such as 'field_name'), it will cause a problem
+        where the JSON field names of the Swagger request parameters are different from those of the
+        GRPC JSON tag names. There are two solutions: Solution 1, remove the underline from the
+         message field name. Option 2, use the tool 'protoc-go-inject-tag' to modify the JSON tag name,
+         such as: string first_name = 1 ; // @gotags: json:"firstName"
+*/
+
+
+message CreateFinancialTransactionRequest {
+	int32 type = 1;  // 类型(1销售收款/2采购付款/3其他收入/4其他支出)
+	string amount = 2;  // 金额
+	string relatedID = 3;  // 关联单据号(订单号/采购单号等)
+	string transactionTime = 4;  // 交易时间
+	uint32 operator = 5;  // 操作人ID
+	string remark = 6;  // 备注
+}
+
+message CreateFinancialTransactionReply {
+  uint64 id = 1;
+}
+
+message DeleteFinancialTransactionByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteFinancialTransactionByIDReply {
+
+}
+
+message UpdateFinancialTransactionByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];  // 流水ID
+	int32 type = 2;  // 类型(1销售收款/2采购付款/3其他收入/4其他支出)
+	string amount = 3;  // 金额
+	string relatedID = 4;  // 关联单据号(订单号/采购单号等)
+	string transactionTime = 5;  // 交易时间
+	uint32 operator = 6;  // 操作人ID
+	string remark = 7;  // 备注
+}
+
+message UpdateFinancialTransactionByIDReply {
+
+}
+
+message FinancialTransaction {
+	uint64 id = 1;  // 流水ID
+	int32 type = 2;  // 类型(1销售收款/2采购付款/3其他收入/4其他支出)
+	string amount = 3;  // 金额
+	string relatedID = 4;  // 关联单据号(订单号/采购单号等)
+	string transactionTime = 5;  // 交易时间
+	uint32 operator = 6;  // 操作人ID
+	string remark = 7;  // 备注
+	string createdAt = 8;  // 创建时间
+	string updatedAt = 9;  // 更新时间
+}
+
+message GetFinancialTransactionByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetFinancialTransactionByIDReply {
+  FinancialTransaction financialTransaction = 1;
+}
+
+message ListFinancialTransactionRequest {
+  api.types.Params params = 1;
+}
+
+message ListFinancialTransactionReply {
+  int64 total = 1;
+  repeated FinancialTransaction financialTransactions = 2;
+}
+
+

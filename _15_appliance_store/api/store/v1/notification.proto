@@ -1,0 +1,196 @@
+syntax = "proto3";
+
+package api.store.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "store/api/store/v1;v1";
+
+/*
+Reference https://github.com/grpc-ecosystem/grpc-gateway/blob/db7fbefff7c04877cdb32e16d4a248a024428207/examples/internal/proto/examplepb/a_bit_of_everything.proto
+Default settings for generating swagger documents
+NOTE: because json does not support 64 bits, the int64 and uint64 types under *.swagger.json are automatically converted to string types
+Tips: add swagger option to rpc method, example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "store api docs";
+    version: "2.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service notification {
+  // create notification
+  rpc Create(CreateNotificationRequest) returns (CreateNotificationReply) {
+    option (google.api.http) = {
+      post: "/api/v1/notification"
+      body: "*"
+    };
+  }
+
+  // delete notification by id
+  rpc DeleteByID(DeleteNotificationByIDRequest) returns (DeleteNotificationByIDReply) {
+    option (google.api.http) = {
+      delete: "/api/v1/notification/{id}"
+    };
+  }
+
+  // update notification by id
+  rpc UpdateByID(UpdateNotificationByIDRequest) returns (UpdateNotificationByIDReply) {
+    option (google.api.http) = {
+      put: "/api/v1/notification/{id}"
+      body: "*"
+    };
+  }
+
+  // get notification by id
+  rpc GetByID(GetNotificationByIDRequest) returns (GetNotificationByIDReply) {
+    option (google.api.http) = {
+      get: "/api/v1/notification/{id}"
+    };
+  }
+
+  // list of notification by query parameters
+  rpc List(ListNotificationRequest) returns (ListNotificationReply) {
+    option (google.api.http) = {
+      post: "/api/v1/notification/list"
+      body: "*"
+    };
+  }
+
+  // -----------------------------------------------------------
+
+  // 发送实时通知
+  rpc SendRealTimeNotification(SendNotificationRequest) returns (SendNotificationResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/notification/send"
+      body: "*"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/notification/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getNotification?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. If the message field name contain underscores(such as 'field_name'), it will cause a problem
+        where the JSON field names of the Swagger request parameters are different from those of the
+        GRPC JSON tag names. There are two solutions: Solution 1, remove the underline from the
+         message field name. Option 2, use the tool 'protoc-go-inject-tag' to modify the JSON tag name,
+         such as: string first_name = 1 ; // @gotags: json:"firstName"
+*/
+
+
+message CreateNotificationRequest {
+	int32 type = 1;  // 类型(1库存预警/2订单状态/3促销提醒)
+	string recipient = 2;  // 接收人(手机号/邮箱/员工ID)
+	string content = 3;  // 通知内容
+	int32 sendStatus = 4;  // 发送状态(0待发送/1已发送/2失败)
+}
+
+message CreateNotificationReply {
+  uint64 id = 1;
+}
+
+message DeleteNotificationByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];
+}
+
+message DeleteNotificationByIDReply {
+
+}
+
+message UpdateNotificationByIDRequest {
+	uint64 id = 1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\""];  // 通知ID
+	int32 type = 2;  // 类型(1库存预警/2订单状态/3促销提醒)
+	string recipient = 3;  // 接收人(手机号/邮箱/员工ID)
+	string content = 4;  // 通知内容
+	int32 sendStatus = 5;  // 发送状态(0待发送/1已发送/2失败)
+}
+
+message UpdateNotificationByIDReply {
+
+}
+
+message Notification {
+	uint64 id = 1;  // 通知ID
+	int32 type = 2;  // 类型(1库存预警/2订单状态/3促销提醒)
+	string recipient = 3;  // 接收人(手机号/邮箱/员工ID)
+	string content = 4;  // 通知内容
+	int32 sendStatus = 5;  // 发送状态(0待发送/1已发送/2失败)
+	string createdAt = 6;  // 创建时间
+	string updatedAt = 7;  // 更新时间
+}
+
+message GetNotificationByIDRequest {
+  uint64 id =1 [(validate.rules).uint64.gt = 0, (tagger.tags) = "uri:\"id\"" ];
+}
+
+message GetNotificationByIDReply {
+  Notification notification = 1;
+}
+
+message ListNotificationRequest {
+  api.types.Params params = 1;
+}
+
+message ListNotificationReply {
+  int64 total = 1;
+  repeated Notification notifications = 2;
+}
+
+// --------------------------------------------
+
+message SendNotificationRequest {
+  int32 channel = 1;         // 通知渠道（1=SMS 2=Email 3=App推送）
+  string recipient = 2;      // 接收人（手机号/邮箱）
+  string templateID = 3;    // 模板ID
+  map<string, string> params = 4; // 模板参数
+}
+
+message SendNotificationResponse {
+  string messageID = 1;     // 消息ID
+  string sendTime = 2;      // 发送时间
+}

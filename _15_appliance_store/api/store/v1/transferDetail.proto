@@ -1,0 +1,169 @@
+syntax = "proto3";
+
+package api.store.v1;
+
+import "api/types/types.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "tagger/tagger.proto";
+import "validate/validate.proto";
+
+option go_package = "store/api/store/v1;v1";
+
+/*
+Reference https://github.com/grpc-ecosystem/grpc-gateway/blob/db7fbefff7c04877cdb32e16d4a248a024428207/examples/internal/proto/examplepb/a_bit_of_everything.proto
+Default settings for generating swagger documents
+NOTE: because json does not support 64 bits, the int64 and uint64 types under *.swagger.json are automatically converted to string types
+Tips: add swagger option to rpc method, example:
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get user by id",
+      description: "get user by id",
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+*/
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8080"
+  base_path: ""
+  info: {
+    title: "store api docs";
+    version: "2.0";
+  }
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "Type Bearer your-jwt-token to Value";
+      }
+    }
+  }
+};
+
+service transferDetail {
+  // create transferDetail
+  rpc Create(CreateTransferDetailRequest) returns (CreateTransferDetailReply) {
+    option (google.api.http) = {
+      post: "/api/v1/transferDetail"
+      body: "*"
+    };
+  }
+
+  // delete transferDetail by transferID
+  rpc DeleteByTransferID(DeleteTransferDetailByTransferIDRequest) returns (DeleteTransferDetailByTransferIDReply) {
+    option (google.api.http) = {
+      delete: "/api/v1/transferDetail/{transferID}"
+    };
+  }
+
+  // update transferDetail by transferID
+  rpc UpdateByTransferID(UpdateTransferDetailByTransferIDRequest) returns (UpdateTransferDetailByTransferIDReply) {
+    option (google.api.http) = {
+      put: "/api/v1/transferDetail/{transferID}"
+      body: "*"
+    };
+  }
+
+  // get transferDetail by transferID
+  rpc GetByTransferID(GetTransferDetailByTransferIDRequest) returns (GetTransferDetailByTransferIDReply) {
+    option (google.api.http) = {
+      get: "/api/v1/transferDetail/{transferID}"
+    };
+  }
+
+  // list of transferDetail by query parameters
+  rpc List(ListTransferDetailRequest) returns (ListTransferDetailReply) {
+    option (google.api.http) = {
+      post: "/api/v1/transferDetail/list"
+      body: "*"
+    };
+  }
+}
+
+
+/*
+Notes for defining message fields:
+    1. Suggest using camel case style naming for message field names, such as firstName, lastName, etc.
+    2. If the message field name ending in 'id', it is recommended to use xxxID naming format, such as userID, orderID, etc.
+    3. Add validate rules https://github.com/envoyproxy/protoc-gen-validate#constraint-rules, such as:
+        uint64 id = 1 [(validate.rules).uint64.gte  = 1];
+
+If used to generate code that supports the HTTP protocol, notes for defining message fields:
+    1. If the route contains the path parameter, such as /api/v1/transferDetail/{id}, the defined
+        message must contain the name of the path parameter and the name should be added
+        with a new tag, such as int64 id = 1 [(tagger.tags) = "uri:\"id\""];
+    2. If the request url is followed by a query parameter, such as /api/v1/getTransferDetail?name=Tom,
+        a form tag must be added when defining the query parameter in the message, such as:
+        string name = 1 [(tagger.tags) = "form:\"name\""].
+    3. If the message field name contain underscores(such as 'field_name'), it will cause a problem
+        where the JSON field names of the Swagger request parameters are different from those of the
+        GRPC JSON tag names. There are two solutions: Solution 1, remove the underline from the
+         message field name. Option 2, use the tool 'protoc-go-inject-tag' to modify the JSON tag name,
+         such as: string first_name = 1 ; // @gotags: json:"firstName"
+*/
+
+
+message CreateTransferDetailRequest {
+	string transferID = 1;  // 调拨单号
+	uint32 skuID = 2;  // SKU ID
+	uint32 quantity = 3;  // 调拨数量
+}
+
+message CreateTransferDetailReply {
+  string transferID = 1;
+}
+
+message DeleteTransferDetailByTransferIDRequest {
+  string transferID = 1 [(validate.rules).string.min_len = 1, (tagger.tags) = "uri:\"transferID\""];
+}
+
+message DeleteTransferDetailByTransferIDReply {
+
+}
+
+message UpdateTransferDetailByTransferIDRequest {
+	string transferID = 1 [(validate.rules).string.min_len = 1, (tagger.tags) = "uri:\"transferID\""];  // 调拨单号
+	uint32 skuID = 2;  // SKU ID
+	uint32 quantity = 3;  // 调拨数量
+}
+
+message UpdateTransferDetailByTransferIDReply {
+
+}
+
+message TransferDetail {
+	string transferID = 1;  // 调拨单号
+	uint32 skuID = 2;  // SKU ID
+	uint32 quantity = 3;  // 调拨数量
+	string createdAt = 4;  // 创建时间
+	string updatedAt = 5;  // 更新时间
+}
+
+message GetTransferDetailByTransferIDRequest {
+  string transferID = 1 [(validate.rules).string.min_len = 1, (tagger.tags) = "uri:\"transferID\""];
+}
+
+message GetTransferDetailByTransferIDReply {
+  TransferDetail transferDetail = 1;
+}
+
+message ListTransferDetailRequest {
+  api.types.Params params = 1;
+}
+
+message ListTransferDetailReply {
+  int64 total = 1;
+  repeated TransferDetail transferDetails = 2;
+}
+
+
