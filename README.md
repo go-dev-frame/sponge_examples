@@ -27,3 +27,7 @@ Here are some examples of using sponge to develop go projects. [Sponge](https://
 - [Cache consistency (redis, mysql)](https://github.com/zhufuyi/sponge_examples/tree/main/_13_sponge-dtm-cache)
 - [Simple distributed order system](https://github.com/zhufuyi/sponge_examples/tree/main/9_order-grpc-distributed-transaction)
 - [E-Commerce system](https://github.com/zhufuyi/sponge_examples/tree/main/_14_eshop)
+
+### DeepSeek+Sponge collaborative development examples
+
+- [Appliance store](https://github.com/go-dev-frame/sponge_examples/tree/main/_15_appliance_store)
