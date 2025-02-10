@@ -1,3 +1,5 @@
+# English | [中文](https://github.com/go-dev-frame/sponge_examples/blob/main/_15_appliance_store/docs/readme-cn.md)
+
 ## Project Practical Example —— Building a Home Appliance Retail Management Platform from Scratch
 
 Below is an example of building a product management platform for an offline home appliance store, illustrating how to use Sponge and DeepSeek to collaboratively develop backend services. The backend technology stack chosen for this example is **Web Service (Gin + Gorm + Protobuf)**.
