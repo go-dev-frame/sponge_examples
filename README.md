@@ -31,3 +31,7 @@ Here are some examples of using sponge to develop go projects. [Sponge](https://
 ### DeepSeek+Sponge collaborative development examples
 
 - [Appliance store](https://github.com/go-dev-frame/sponge_examples/tree/main/_15_appliance_store)
+
+### Sponge+AI collaborative development examples
+
+- [Home appliance retail management platform (Sponge+DeepSeek R1)](https://github.com/zhufuyi/sponge_examples/tree/main/_15_appliance_store)
