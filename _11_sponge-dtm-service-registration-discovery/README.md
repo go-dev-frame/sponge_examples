@@ -34,24 +34,9 @@ For more detailed documentation on creating gRPC services with Sponge, refer to:
 
 <br>
 
-### Compiling DTM
-
-Clone the DTM project code and compile it to get the DTM binary file.
-
-```bash
-git clone https://github.com/dtm-labs/dtm.git
-cd dtm
-go build
-
-# Copy a sample configuration for DTM
-cp conf.sample.yml conf.yml
-```
-
-Note: The main branch of DTM already includes the Sponge driver, but since it's not yet released in the latest version, you need to clone the main branch of DTM to compile it locally.
-
-<br>
-
 ### Using etcd for Service Discovery
+
+Download the [DTM](https://github.com/dtm-labs/dtm/releases/tag/v1.19.0) executable, modify the default DTM configuration.
 
 Follow these steps to use etcd for service registration and discovery:
 

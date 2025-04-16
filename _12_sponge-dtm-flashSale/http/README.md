@@ -8,7 +8,7 @@ This is a sample project that demonstrates how to use Sponge to implement a flas
 1. **Start Redis Service**
 
 2. **Start dtm Service**
-    - Download the [dtm](https://github.com/dtm-labs/dtm/releases/tag/v1.18.0) executable file, modify the default dtm configuration to use Redis as storage, and start the dtm service:
+    - Download the [dtm](https://github.com/dtm-labs/dtm/releases/tag/v1.19.0) executable file, modify the default dtm configuration to use Redis as storage, and start the dtm service:
       ```bash
       dtm -c conf.yml
       ```

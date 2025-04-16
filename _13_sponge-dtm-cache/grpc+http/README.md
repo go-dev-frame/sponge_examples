@@ -8,7 +8,7 @@ Using a gRPC+HTTP hybrid service created by [Sponge](https://github.com/zhufuyi/
 
 - Start the Redis service.
 - Start the MySQL service and import the [stock.sql](test/stock.sql) file into the database.
-- Download the [DTM](https://github.com/dtm-labs/dtm/releases/tag/v1.18.0) executable, modify the default DTM configuration to use Redis, then start the DTM service with: `dtm -c conf.yml`.
+- Download the [DTM](https://github.com/dtm-labs/dtm/releases/tag/v1.19.0) executable, modify the default DTM configuration to use Redis, then start the DTM service with: `dtm -c conf.yml`.
 - Clone the project code locally and modify the IP addresses in the MySQL, Redis, and DTM configurations in [config.yml](configs/stock.yml) (replace the default IP addresses 192.168.3.37 and 192.168.3.90).
 
 Compile and start the service:

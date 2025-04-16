@@ -29,7 +29,9 @@ All services will be running on a virtual machine with the IP address `192.168.3
 
 ### Launching DTM Services
 
-[DTM](https://github.com/dtm-labs/dtm) is a core component of this system, responsible for managing distributed transactions in the flash sale and order processes. Two DTM service instances are required—one for MySQL and one for Redis storage.
+DTM is a core component of this system, responsible for managing distributed transactions in the flash sale and order processes. Two DTM service instances are required—one for MySQL and one for Redis storage.
+
+DTM download link: https://github.com/dtm-labs/dtm/releases/tag/v1.19.0
 
 | Service Name   | Port Configuration            |
 |----------------|-------------------------------|

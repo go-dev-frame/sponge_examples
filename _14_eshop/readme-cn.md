@@ -30,7 +30,7 @@
 
 DTM 是本系统的核心组件之一，负责管理订单和秒杀抢购的分布式事务。需要启动两个 DTM 服务实例，分别用于 MySQL 和 Redis 存储。
 
-DTM下载地址：https://github.com/dtm-labs/dtm/releases/tag/v1.18.0
+DTM下载地址：https://github.com/dtm-labs/dtm/releases/tag/v1.19.0
 
 | 服务名       | 端口配置                 |
 |-------------|-----------------------|
