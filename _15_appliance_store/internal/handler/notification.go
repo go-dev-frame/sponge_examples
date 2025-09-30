@@ -176,7 +176,7 @@ func (h *notificationHandler) List(ctx context.Context, req *storeV1.ListNotific
 
 // SendRealTimeNotification 发送实时通知
 func (h *notificationHandler) SendRealTimeNotification(ctx context.Context, req *storeV1.SendNotificationRequest) (*storeV1.SendNotificationResponse, error) {
-	panic("prompt: 发送实时通知")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:

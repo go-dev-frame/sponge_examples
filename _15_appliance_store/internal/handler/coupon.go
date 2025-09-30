@@ -175,7 +175,7 @@ func (h *couponHandler) List(ctx context.Context, req *storeV1.ListCouponRequest
 
 // RedeemCoupon 优惠券核销
 func (h *couponHandler) RedeemCoupon(ctx context.Context, req *storeV1.RedeemCouponRequest) (*storeV1.RedeemCouponReply, error) {
-	panic("prompt: 优惠券核销")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:

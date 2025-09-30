@@ -28,10 +28,6 @@ Here are some examples of using sponge to develop go projects. [Sponge](https://
 - [Simple distributed order system](https://github.com/zhufuyi/sponge_examples/tree/main/9_order-grpc-distributed-transaction)
 - [E-Commerce system](https://github.com/zhufuyi/sponge_examples/tree/main/_14_eshop)
 
-### DeepSeek+Sponge collaborative development examples
+### Sponge + built-in AI assistant collaborative development example
 
-- [Appliance store](https://github.com/go-dev-frame/sponge_examples/tree/main/_15_appliance_store)
-
-### Sponge+AI collaborative development examples
-
-- [Home appliance retail management platform (Sponge+DeepSeek R1)](https://github.com/zhufuyi/sponge_examples/tree/main/_15_appliance_store)
+- [Home appliance retail management platform](https://github.com/go-dev-frame/sponge_examples/tree/main/_15_appliance_store)

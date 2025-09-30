@@ -181,7 +181,7 @@ func (h *employeePerformanceHandler) List(ctx context.Context, req *storeV1.List
 // 3. 扣除已退货订单金额
 // 4. 生成提成明细记录
 func (h *employeePerformanceHandler) CalculateSalesCommission(ctx context.Context, req *storeV1.CalculateSalesCommissionRequest) (*storeV1.CalculateSalesCommissionReply, error) {
-	panic("prompt: 计算销售提成  实现逻辑：  1. 获取员工当月的销售记录  2. 应用阶梯提成规则计算奖金  3. 扣除已退货订单金额  4. 生成提成明细记录")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:

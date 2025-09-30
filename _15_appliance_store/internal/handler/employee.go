@@ -176,7 +176,7 @@ func (h *employeeHandler) List(ctx context.Context, req *storeV1.ListEmployeeReq
 
 // Login 员工登录，获取访问令牌
 func (h *employeeHandler) Login(ctx context.Context, req *storeV1.LoginRequest) (*storeV1.LoginResponse, error) {
-	panic("prompt: 员工登录，获取访问令牌")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:
@@ -203,7 +203,7 @@ func (h *employeeHandler) Login(ctx context.Context, req *storeV1.LoginRequest) 
 
 // Logout 员工退出登录
 func (h *employeeHandler) Logout(ctx context.Context, req *storeV1.Empty) (*storeV1.Empty, error) {
-	panic("prompt: 员工退出登录")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:
@@ -227,7 +227,7 @@ func (h *employeeHandler) Logout(ctx context.Context, req *storeV1.Empty) (*stor
 
 // ChangePassword 修改密码
 func (h *employeeHandler) ChangePassword(ctx context.Context, req *storeV1.ChangePasswordRequest) (*storeV1.Empty, error) {
-	panic("prompt: 修改密码")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:
@@ -253,7 +253,7 @@ func (h *employeeHandler) ChangePassword(ctx context.Context, req *storeV1.Chang
 
 // ResetPassword 重置密码
 func (h *employeeHandler) ResetPassword(ctx context.Context, req *storeV1.ResetPasswordRequest) (*storeV1.Empty, error) {
-	panic("prompt: 重置密码")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:
@@ -280,7 +280,7 @@ func (h *employeeHandler) ResetPassword(ctx context.Context, req *storeV1.ResetP
 
 // SendVerificationCode 使用阿里云短信服务，向指定手机号发送验证码，验证码存放在redis中，5分钟内有效
 func (h *employeeHandler) SendVerificationCode(ctx context.Context, req *storeV1.SendVerificationCodeRequest) (*storeV1.Empty, error) {
-	panic("prompt: 使用阿里云短信服务，向指定手机号发送验证码，验证码存放在redis中，5分钟内有效")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:

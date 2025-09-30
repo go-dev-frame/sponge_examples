@@ -180,7 +180,7 @@ func (h *promotionHandler) List(ctx context.Context, req *storeV1.ListPromotionR
 // 2. 检查优惠券模板是否有效（类型匹配、有效期覆盖）
 // 3. 建立促销活动与优惠券的绑定关系
 func (h *promotionHandler) BindCouponTemplate(ctx context.Context, req *storeV1.BindCouponTemplateRequest) (*storeV1.BindCouponTemplateReply, error) {
-	panic("prompt: 创建促销活动与优惠券绑定关系  实现逻辑：  1. 验证促销活动是否存在且处于可编辑状态  2. 检查优惠券模板是否有效（类型匹配、有效期覆盖）  3. 建立促销活动与优惠券的绑定关系")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:

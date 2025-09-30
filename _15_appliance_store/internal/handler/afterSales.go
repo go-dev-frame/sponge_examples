@@ -181,7 +181,7 @@ func (h *afterSalesHandler) List(ctx context.Context, req *storeV1.ListAfterSale
 // 3. 分配就近服务网点
 // 4. 生成带条形码的维修工单
 func (h *afterSalesHandler) CreateServiceOrderWithAssignment(ctx context.Context, req *storeV1.CreateServiceOrderWithAssignmentRequest) (*storeV1.CreateServiceOrderWithAssignmentReply, error) {
-	panic("prompt: 创建维修工单  实现逻辑：  1. 验证客户购买记录有效性  2. 检查产品是否在保修期内  3. 分配就近服务网点  4. 生成带条形码的维修工单")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:

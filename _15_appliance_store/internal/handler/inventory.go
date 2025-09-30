@@ -181,7 +181,7 @@ func (h *inventoryHandler) List(ctx context.Context, req *storeV1.ListInventoryR
 // 3. 触发物流系统通知
 // 4. 更新双方仓库库存记录
 func (h *inventoryHandler) ExecuteTransfer(ctx context.Context, req *storeV1.ExecuteTransferRequest) (*storeV1.ExecuteTransferReply, error) {
-	panic("prompt: 执行跨仓库调拨操作  实现逻辑：  1. 校验源仓库库存是否充足  2. 生成调拨单并锁定库存  3. 触发物流系统通知  4. 更新双方仓库库存记录")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:

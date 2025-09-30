@@ -176,7 +176,7 @@ func (h *transferOrderHandler) List(ctx context.Context, req *storeV1.ListTransf
 
 // PrecheckTransfer 库存调拨预检查
 func (h *transferOrderHandler) PrecheckTransfer(ctx context.Context, req *storeV1.PrecheckTransferRequest) (*storeV1.PrecheckTransferReply, error) {
-	panic("prompt: 库存调拨预检查")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:

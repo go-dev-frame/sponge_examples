@@ -181,7 +181,7 @@ func (h *salesOrderHandler) List(ctx context.Context, req *storeV1.ListSalesOrde
 // 3. 关联库存数据标记滞销风险
 // 4. 生成可视化数据格式（JSON/CSV）
 func (h *salesOrderHandler) GenerateHotSalesReport(ctx context.Context, req *storeV1.GenerateHotSalesReportRequest) (*storeV1.GenerateHotSalesReportReply, error) {
-	panic("prompt: 生成热销商品分析报告  实现逻辑：  1. 按指定时间范围统计销量  2. 计算商品销售增长率  3. 关联库存数据标记滞销风险  4. 生成可视化数据格式（JSON/CSV）")
+	panic("implement me")
 
 	// fill in the business logic code here
 	// example:
